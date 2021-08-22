@@ -1,15 +1,22 @@
 <template>
   <div>
     <show-word v-bind:words="words" />
+
+    <br>
+    <hr>
+    <import-export v-model="words" />
   </div>
 </template>
 
 <script>
 import ShowWord from '@/components/ShowWord.vue';
+import ImportExport from '@/components/ImportExport.vue';
 import Word from '@/store/Word';
 
 export default {
   name: 'App',
+  methods: {
+  },
   data() {
     return {
       words: [
@@ -19,7 +26,7 @@ export default {
       ],
     };
   },
-  components: { ShowWord },
+  components: { ShowWord, ImportExport },
 };
 </script>
 

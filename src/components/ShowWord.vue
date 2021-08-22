@@ -3,7 +3,7 @@
     <p>Showing word {{currentWordIndex+1}} of {{words.length}}</p>
     <br />
 
-    <h2>{{words[currentWordIndex].label}}</h2>
+    <h1>{{words[currentWordIndex].label}}</h1>
 
     <div>
       <span>Translations:</span>
@@ -19,7 +19,9 @@
     <p>Appeard: {{words[currentWordIndex].appearanceCount}} times</p>
 
     <button @click="nextWord">Next word</button>
-    <button @click="repeatWord">Add to repeats</button>
+    <button @click="repeatWord">
+      Add to repeats ({{this.words[this.currentWordIndex].repeatCount}})
+    </button>
     <button @click="prevWord">Prev word</button>
   </div>
 </template>
