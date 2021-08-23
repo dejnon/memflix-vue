@@ -28,6 +28,7 @@
 
 <script>
 import Word from '@/store/Word';
+import MyMemoryTranslation from '@/mymemorytranslation';
 
 export default {
   name: 'ShowWord',
@@ -50,6 +51,11 @@ export default {
     nextWord() {
       this.currentWordIndex += 1;
       this.words[this.currentWordIndex].shownCount += 1;
+      MyMemoryTranslation
+        .get(this.words[this.currentWordIndex].label, 'de', 'en')
+        .then((translation) => {
+          this.words[this.currentWordIndex].translations = translation.translations;
+        });
     },
     prevWord() {
       this.currentWordIndex -= 1;

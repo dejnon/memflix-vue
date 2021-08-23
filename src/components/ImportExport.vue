@@ -43,7 +43,7 @@ export default {
     };
   },
   props: {
-    value: Array[Word],
+    words: Array[Word],
   },
   mounted() {
     // browser.runtime.sendMessage({});
@@ -55,7 +55,7 @@ export default {
       this.showImportXml = false;
     },
     importJsonStart() {
-      this.$emit('input', JSON.parse(this.jsonImportValue));
+      this.$emit('newImport', JSON.parse(this.jsonImportValue));
     //   this.words = JSON.parse(this.jsonImportValue);
     },
 
@@ -66,17 +66,7 @@ export default {
     },
     importXmlStart() {
       const newWords = Parser.xmlToWords(this.xmlImportValue);
-      const existingWords = new Map(this.value.map((word) => [word.token, word]));
-
-      Object.values(newWords).forEach((newWord) => {
-        if (!existingWords.get(newWord.token)) {
-          existingWords.set(newWord.token, newWord);
-        } else {
-          existingWords.get(newWord.token).appearanceCount += newWord.appearanceCount;
-        }
-      });
-
-      this.$emit('input', Array.from(existingWords.values()));
+      this.$emit('newWords', newWords);
     //   this.words = Object.values(newWords);
     },
 
@@ -84,7 +74,7 @@ export default {
       this.showExportJson = !this.showExportJson;
       this.showImportJson = false;
       this.showImportXml = false;
-      this.exportJsonValue = JSON.stringify(this.value);
+      this.exportJsonValue = JSON.stringify(this.words);
     },
   },
   computed: {

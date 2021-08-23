@@ -4,7 +4,7 @@
 
     <br>
     <hr>
-    <import-export v-model="words" />
+    <import-export v-bind:words="words" @newWords="updateWords" @newImport="overrideWords" />
   </div>
 </template>
 
@@ -16,6 +16,22 @@ import Word from '@/store/Word';
 export default {
   name: 'App',
   methods: {
+    overrideWords(newWords) {
+      this.words = Array.from(newWords);
+    },
+    updateWords(newWords) {
+      const existingWords = new Map(this.words.map((word) => [word.token, word]));
+
+      Object.values(newWords).forEach((newWord) => {
+        if (!existingWords.get(newWord.token)) {
+          existingWords.set(newWord.token, newWord);
+        } else {
+          existingWords.get(newWord.token).appearanceCount += newWord.appearanceCount;
+        }
+      });
+
+      this.words = Array.from(existingWords.values());
+    },
   },
   data() {
     return {
@@ -33,6 +49,6 @@ export default {
 <style>
 html {
   width: 400px;
-  height: 400px;
+  /* height: 400px; */
 }
 </style>
