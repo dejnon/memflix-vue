@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <button @click="exportJson">Export JSON</button>
     <button @click="importJson">Import JSON</button>
     <button @click="importXml">Import XML</button>
@@ -24,7 +23,6 @@
       <br>
       <br>
     </div>
-
   </div>
 </template>
 
@@ -68,7 +66,17 @@ export default {
     },
     importXmlStart() {
       const newWords = Parser.xmlToWords(this.xmlImportValue);
-      this.$emit('input', Object.values(newWords));
+      const existingWords = new Map(this.value.map((word) => [word.token, word]));
+
+      Object.values(newWords).forEach((newWord) => {
+        if (!existingWords.get(newWord.token)) {
+          existingWords.set(newWord.token, newWord);
+        } else {
+          existingWords.get(newWord.token).appearanceCount += newWord.appearanceCount;
+        }
+      });
+
+      this.$emit('input', Array.from(existingWords.values()));
     //   this.words = Object.values(newWords);
     },
 
