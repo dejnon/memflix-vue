@@ -3,6 +3,7 @@
     <button @click="exportJson">Export JSON</button>
     <button @click="importJson">Import JSON</button>
     <button @click="importXml">Import XML</button>
+    <button @click="exportBrowser">Export to Browser</button>
 
     <div v-if="showExportJson">
       <textarea rows="8" cols="38" v-model="exportJsonValue"></textarea>
@@ -49,6 +50,11 @@ export default {
     // browser.runtime.sendMessage({});
   },
   methods: {
+    exportBrowser() {
+      chrome.storage.local.set(
+        { words: this.words },
+      );
+    },
     importJson() {
       this.showImportJson = !this.showImportJson;
       this.showExportJson = false;

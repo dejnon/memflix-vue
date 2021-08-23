@@ -23,15 +23,30 @@ export default {
       const existingWords = new Map(this.words.map((word) => [word.token, word]));
 
       Object.values(newWords).forEach((newWord) => {
-        if (!existingWords.get(newWord.token)) {
+        if (!existingWords.has(newWord.token)) {
           existingWords.set(newWord.token, newWord);
         } else {
           existingWords.get(newWord.token).appearanceCount += newWord.appearanceCount;
         }
       });
 
-      this.words = Array.from(existingWords.values());
+      const toBeInsertedCount = existingWords.size - this.words.length;
+      const newWordsCount = Object.keys(newWords).length;
+
+      if (window.confirm(`Import contains: ${newWordsCount} words, ${toBeInsertedCount} of them are new`)) {
+        this.words = Array.from(existingWords.values());
+      }
     },
+  },
+  mounted() {
+    chrome.storage.local.get(
+      ['words'],
+      (storage) => {
+        if (storage.words) {
+          this.words = storage.words;
+        }
+      },
+    );
   },
   data() {
     return {
@@ -48,7 +63,7 @@ export default {
 
 <style>
 html {
-  width: 400px;
+  width: 450px;
   /* height: 400px; */
 }
 </style>
