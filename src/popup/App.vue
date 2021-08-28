@@ -1,10 +1,18 @@
 <template>
   <div>
+
+    <div>
+      <a href="#" @click="showAllWords">All words</a>
+      |
+      <a href="#" @click="showNewWords">Latest words ({{this.newWords.length}})</a>
+      <hr>
+    </div>
+
     <show-word v-bind:words="words" />
 
     <br>
     <hr>
-    <import-export v-bind:words="words" @newWords="updateWords" @newImport="overrideWords" />
+    <import-export v-bind:words="allWords" @newWords="updateWords" @newImport="overrideWords" />
   </div>
 </template>
 
@@ -16,45 +24,59 @@ import Word from '@/store/Word';
 export default {
   name: 'App',
   methods: {
+    showAllWords() {
+      this.words = this.allWords;
+    },
+    showNewWords() {
+      this.words = this.newWords;
+    },
     overrideWords(newWords) {
-      this.words = Array.from(newWords);
+      this.allWords = Array.from(newWords);
     },
     updateWords(newWords) {
-      const existingWords = new Map(this.words.map((word) => [word.token, word]));
+      const existingWords = new Map(this.allWords.map((word) => [word.token, word]));
+      const latestWords = [];
 
       Object.values(newWords).forEach((newWord) => {
         if (!existingWords.has(newWord.token)) {
           existingWords.set(newWord.token, newWord);
+          latestWords.push(existingWords.get(newWord.token));
         } else {
           existingWords.get(newWord.token).appearanceCount += newWord.appearanceCount;
         }
       });
 
-      const toBeInsertedCount = existingWords.size - this.words.length;
+      const toBeInsertedCount = existingWords.size - this.allWords.length;
       const newWordsCount = Object.keys(newWords).length;
 
       if (window.confirm(`Import contains: ${newWordsCount} words, ${toBeInsertedCount} of them are new`)) {
-        this.words = Array.from(existingWords.values());
+        this.newWords = latestWords;
+        this.allWords = Array.from(existingWords.values());
+        this.words = this.allWords;
       }
     },
   },
   mounted() {
+    this.words = this.allWords;
     chrome.storage.local.get(
       ['words'],
       (storage) => {
         if (storage.words) {
-          this.words = storage.words;
+          this.allWords = storage.words;
+          this.words = this.allWords;
         }
       },
     );
   },
   data() {
     return {
-      words: [
+      allWords: [
         new Word('1', 'fdsss', ['one', 'two']),
         new Word('2', 'aaaa'),
         new Word('3', 'rewrew'),
       ],
+      newWords: [],
+      words: [],
     };
   },
   components: { ShowWord, ImportExport },
