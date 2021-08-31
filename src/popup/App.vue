@@ -5,7 +5,11 @@
     <div>
       <a href="#" @click="showAllWords">All words</a>
       |
-      <a href="#" @click="showNewWords">Latest words ({{this.newWords.length}})</a>
+      <a href="#" @click="showLatestWords">Latest words ({{this.newWords.length}})</a>
+      |
+      <a href="#" @click="showNewWords">Words by frequency</a>
+      |
+      <a href="#" @click="showDislikedWords">Disliked</a>
       <hr>
     </div>
 
@@ -38,8 +42,17 @@ export default {
     showAllWords() {
       this.words = this.allWords;
     },
-    showNewWords() {
+    showLatestWords() {
       this.words = this.newWords;
+    },
+    showDislikedWords() {
+      this.words = [...this.allWords]
+        .filter((a) => a.dislikeCount > 0);
+    },
+    showNewWords() {
+      this.words = [...this.allWords]
+        .filter((a) => a.dislikeCount <= 0)
+        .sort((a, b) => b.shownCount - a.shownCount || b.appearanceCount - a.appearanceCount);
     },
     overrideWords(newWords) {
       this.allWords = Array.from(newWords);
