@@ -1,32 +1,29 @@
 <template>
-  <div>
-    <button @click="exportJson">Export JSON</button>
-    <button @click="importJson">Import JSON</button>
-    <button @click="importXml">Import XML</button>
-    <button @click="exportBrowser">
-      Export to Browser
-    </button>
-
+  <md-bottom-bar>
+    <md-bottom-bar-item md-label="Export JSON" md-icon="download" @click="exportJson"/>
+    <md-bottom-bar-item md-label="Import JSON" md-icon="upload" @click="importJson"/>
+    <md-bottom-bar-item md-label="Import XML" md-icon="upload" @click="importXml"/>
+    <md-bottom-bar-item md-label="Export to Browser" md-icon="download" @click="exportBrowser"/>
     <div v-if="showExportJson">
-      <textarea rows="8" cols="38" v-model="exportJsonValue"></textarea>
+      <md-field>
+        <md-textarea rows="8" cols="38" v-model="exportJsonValue"/>
+      </md-field>
     </div>
 
     <div v-if="showImportJson">
-      <textarea rows="8" cols="38" v-model="jsonImportValue"></textarea>
-      <br>
-      <button @click="importJsonStart">Import</button>
-      <br>
-      <br>
+      <md-field>
+        <md-textarea rows="8" cols="38" v-model="jsonImportValue"/>
+      </md-field>
+      <md-button class="md-raised md-primary" @click="importJsonStart">Import</md-button>
     </div>
 
     <div v-if="showImportXml">
-      <textarea rows="8" cols="38" v-model="xmlImportValue"></textarea>
-      <br>
-      <button @click="importXmlStart">Import</button>
-      <br>
-      <br>
+      <md-field>
+        <md-textarea rows="8" cols="38" v-model="xmlImportValue"/>
+      </md-field>
+      <md-button class="md-raised md-primary" @click="importXmlStart">Import</md-button>
     </div>
-  </div>
+  </md-bottom-bar>
 </template>
 
 <script>

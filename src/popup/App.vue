@@ -1,40 +1,48 @@
 /* eslint-disable no-alert */
 <template>
-  <div>
+  <div  class="md-layout">
+    <div class="md-layout-item">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <div>
-      <a href="#" @click="showAllWords">All words</a>
-      |
-      <a href="#" @click="showLatestWords">Latest words ({{this.newWords.length}})</a>
-      |
-      <a href="#" @click="showNewWords">Words by frequency</a>
-      |
-      <a href="#" @click="showDislikedWords">Disliked</a>
+    <md-toolbar class="md-caption md-dense">
+      <md-button @click="showAllWords">All words</md-button>
+      <md-button @click="showLatestWords">Latest ({{this.newWords.length}})</md-button>
+      <md-button @click="showNewWords">By frequency</md-button>
+      <md-button @click="showDislikedWords">Disliked</md-button>
       <hr>
-    </div>
+    </md-toolbar>
 
     <show-word v-bind:words="words" />
 
     <br>
-    <hr>
     <import-export
       v-bind:words="allWords"
       @savedWords="saveWords"
       @newWords="updateWords"
       @newImport="overrideWords" />
 
-    <p>
+    <md-toolbar class="md-dense">
+      <p class="md-caption">
       Showing: {{this.words.length}}.
       Saved: {{this.savedWords.length}}.
       Pending to save: {{this.allWords.length-this.savedWords.length}}
-    </p>
+      </p>
+    </md-toolbar>
+</div>
   </div>
 </template>
 
 <script>
+import VueMaterial from 'vue-material';
+import Vue from 'vue';
 import ShowWord from '@/components/ShowWord.vue';
 import ImportExport from '@/components/ImportExport.vue';
 import Word from '@/store/Word';
+import 'vue-material/dist/vue-material.min.css';
+// import 'vue-material/dist/theme/default-dark.css'; // dark mode
+import 'vue-material/dist/theme/default.css'; // light mode
+
+Vue.use(VueMaterial);
 
 export default {
   name: 'App',
@@ -123,7 +131,7 @@ export default {
 
 <style>
 html {
-  width: 450px;
+  width: 500px;
   /* height: 400px; */
 }
 </style>
