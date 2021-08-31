@@ -1,7 +1,17 @@
-browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log('Hello from the background');
+/* eslint-disable no-unused-vars */
+import Parser from '@/parser';
 
-  browser.tabs.executeScript({
-    file: 'content-script.js',
-  });
+console.log('we have listener!');
+
+chrome.runtime.onMessage.addListener((newRequest, sender, sendResponse) => {
+  const newWords = Parser.xmlToWords(newRequest.data);
+  console.log(newWords);
+
+  chrome.storage.local.set(
+    { incomingWords: newWords },
+  );
+
+  console.log('saved!');
+
+  return true; // Keep the channel open
 });

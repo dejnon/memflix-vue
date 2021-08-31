@@ -18,7 +18,7 @@
     <p>Shown: {{words[currentWordIndex].shownCount}} times</p>
     <p>Appeard: {{words[currentWordIndex].appearanceCount}} times</p>
 
-    <button @click="nextWord">Next word</button>
+    <button @click="nextWord" v-on:keyup.n="nextWord" >Next word</button>
     <button @click="repeatWord">
       Add to repeats ({{this.words[this.currentWordIndex].repeatCount}})
     </button>

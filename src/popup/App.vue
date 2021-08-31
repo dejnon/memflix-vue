@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 <template>
   <div>
 
@@ -12,7 +13,17 @@
 
     <br>
     <hr>
-    <import-export v-bind:words="allWords" @newWords="updateWords" @newImport="overrideWords" />
+    <import-export
+      v-bind:words="allWords"
+      @savedWords="saveWords"
+      @newWords="updateWords"
+      @newImport="overrideWords" />
+
+    <p>
+      Showing: {{this.words.length}}.
+      Saved: {{this.savedWords.length}}.
+      Pending to save: {{this.allWords.length-this.savedWords.length}}
+    </p>
   </div>
 </template>
 
@@ -32,6 +43,9 @@ export default {
     },
     overrideWords(newWords) {
       this.allWords = Array.from(newWords);
+    },
+    saveWords(savedWords) {
+      this.savedWords = savedWords;
     },
     updateWords(newWords) {
       const existingWords = new Map(this.allWords.map((word) => [word.token, word]));
@@ -64,7 +78,17 @@ export default {
         if (storage.words) {
           this.allWords = storage.words;
           this.words = this.allWords;
+          this.savedWords = this.allWords;
         }
+      },
+    );
+    chrome.storage.local.get(
+      ['incomingWords'],
+      (storage) => {
+        if (storage.incomingWords) {
+          this.updateWords(storage.incomingWords);
+        }
+        console.log(this.newWords);
       },
     );
   },
@@ -76,6 +100,7 @@ export default {
         new Word('3', 'rewrew'),
       ],
       newWords: [],
+      savedWords: [],
       words: [],
     };
   },
